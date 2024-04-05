@@ -1,4 +1,5 @@
-﻿using PSI;
+﻿using Ops.Expr;
+using PSI;
 using PSI.Ops;
 using System.Diagnostics;
 
@@ -40,6 +41,10 @@ static class Start {
       var graph = new ExprGrapher (expr);
       node.Accept (graph);
       Directory.CreateDirectory ("c:/etc");
+
+      var xml = new ExprXml (expr);
+      xml.SaveTo ("c:/etc/test.xml", node.Accept (xml));
+
       graph.SaveTo ("c:/etc/test.html");
       var pi = new ProcessStartInfo ("c:/etc/test.html") { UseShellExecute = true };
       Process.Start (pi);
