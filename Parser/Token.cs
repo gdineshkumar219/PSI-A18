@@ -1,9 +1,9 @@
-namespace PSI;
+﻿namespace PSI;
 using static Token.E;
 
 // Represents a PSI language Token
 public class Token {
-   public Token (Tokenizer source, E kind, string text, int line, int column) 
+   public Token (Tokenizer source, E kind, string text, int line, int column)
       => (Source, Kind, Text, Line, Column) = (source, kind, text, line, column);
    public Tokenizer Source { get; }
    public E Kind { get; }
@@ -17,10 +17,10 @@ public class Token {
       PROGRAM, VAR, IF, THEN, WHILE, ELSE, FOR, TO, DOWNTO,
       DO, BEGIN, END, PRINT, TYPE, NOT, OR, AND, MOD, _ENDKEYWORDS,
       // Operators
-      ADD, SUB, MUL, DIV, NEQ, LEQ, GEQ, EQ, LT, GT, ASSIGN, 
+      ADD, SUB, MUL, DIV, NEQ, LEQ, GEQ, EQ, LT, GT, ASSIGN,
       _ENDOPERATORS,
       // Punctuation
-      SEMI, PERIOD, COMMA, OPEN, CLOSE, COLON, 
+      SEMI, PERIOD, COMMA, OPEN, CLOSE, COLON,
       _ENDPUNCTUATION,
       // Others
       IDENT, INTEGER, REAL, BOOLEAN, STRING, CHAR, EOF, ERROR
@@ -37,10 +37,20 @@ public class Token {
 
    // Utility function used to echo an error to the console
    public void PrintError () {
+      Console.OutputEncoding = Encoding.UTF8;
+      Console.WriteLine ($"File: {Source.FileName}");
+      Console.WriteLine ("────┬─────────────");
+      int printNum = Line - 2, printLine = Line - 3;
+      for (int i = 0; i < 5; i++) {
+         Console.WriteLine ($"  {printNum++,2}│ {Source.Lines[printLine++]}");
+         if (printNum - 1 == Line) {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine ($"{new string (' ', Column + 5)}^");
+            Console.WriteLine ($"{new string (' ', Column)}{Text}");
+            Console.ResetColor ();
+         }
+      }
       if (Kind != ERROR) throw new Exception ("PrintError called on a non-error token");
-      Console.ForegroundColor = ConsoleColor.Yellow;
-      Console.WriteLine ($"At line {Line}, column {Column} of {Source.FileName}: {Text}");
-      Console.ResetColor ();
    }
 
    // Helper used by the parser (maps operator sequences to E values)

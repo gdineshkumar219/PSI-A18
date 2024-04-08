@@ -1,6 +1,7 @@
 ﻿using PSI;
 using PSI.Ops;
 using System.Diagnostics;
+using System.Text;
 
 static class Start {
    static void Main () {
@@ -67,6 +68,8 @@ static class Start {
 
    // Tokenizer test of valid and invalid programs
    static void Test4 () {
+      Console.OutputEncoding = Encoding.UTF8;
+
       Console.WriteLine ("-----------------");
       Console.WriteLine ("Valid program");
       var tokenizer = new Tokenizer (Prog0);
