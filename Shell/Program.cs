@@ -1,13 +1,12 @@
 ﻿using PSI;
 using PSI.Ops;
 using System.Diagnostics;
-using System.Text;
 
 static class Start {
    static void Main () {
-      Test1 ();      // Test ExprEval and ExprILGen
-      Test2 ();      // Test ExprTyper and ExprGrapher
-      Test3 ();      // Type checks on various expressions
+      //Test1 ();      // Test ExprEval and ExprILGen
+      //Test2 ();      // Test ExprTyper and ExprGrapher
+      //Test3 ();      // Type checks on various expressions
       Test4 ();      // Tokenizer - printout of invalid token
    }
 
@@ -68,7 +67,7 @@ static class Start {
 
    // Tokenizer test of valid and invalid programs
    static void Test4 () {
-      Console.OutputEncoding = Encoding.UTF8;
+      Console.OutputEncoding = System.Text.Encoding.UTF8;
 
       Console.WriteLine ("-----------------");
       Console.WriteLine ("Valid program");
@@ -82,15 +81,21 @@ static class Start {
       }
       Console.WriteLine (); Console.WriteLine ();
 
-      Console.WriteLine ("Testing invalid program:");
+      Console.WriteLine ("Testing for invalid program:");
       var prog1 = Prog0.Replace ("prod * i;", "prod * i?");
       tokenizer = new Tokenizer (prog1);
+      bool errorFound = false;
       for (; ; ) {
          var token = tokenizer.Next ();
-         if (token.Kind == Token.E.ERROR) { token.PrintError (); break; }
+         if (token.Kind == Token.E.ERROR) {
+            token.PrintError ();
+            errorFound = true;
+            break;
+         }
          if (token.Kind == Token.E.EOF) break;
       }
       Console.WriteLine ();
+      if (!errorFound) Console.WriteLine ("The program has no error");
       Console.Write ("\nPress any key..."); Console.ReadKey (true);
    }
    static string Prog0 = """
