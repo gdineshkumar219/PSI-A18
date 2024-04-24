@@ -4,10 +4,10 @@ using System.Diagnostics;
 
 static class Start {
    static void Main () {
-      Test1 ();      // Test ExprEval and ExprILGen
+      //Test1 ();      // Test ExprEval and ExprILGen
       Test2 ();      // Test ExprTyper and ExprGrapher
-      Test3 ();      // Type checks on various expressions
-      Test4 ();      // Tokenizer - printout of invalid token
+      //Test3 ();      // Type checks on various expressions
+      //Test4 ();      // Tokenizer - printout of invalid token
    }
 
    // Test ExprEval and ExprILGen
@@ -28,22 +28,34 @@ static class Start {
 
    // Test type-assignment, graph generation
    static void Test2 () {
-      string expr = "(pi + 3.5) + 2 <= 1 <> \"Hello\" + two > true + \"World\"";
-      var node = new Parser (new Tokenizer (expr)).Parse ();
 
-      Console.WriteLine ("-----------------");
-      Console.WriteLine ($"Expression = {expr}");
-      Dictionary<string, NType> types = new () { ["pi"] = NType.Real, ["two"] = NType.Int };
-      NType type = node.Accept (new ExprTyper (types));
-      Console.WriteLine ($"Type = {type}");
+      string expression = "12.0 + pi + sin(3.5) + atan2(12, 13.5) + length(\"hello\") + random()";
 
-      var graph = new ExprGrapher (expr);
-      node.Accept (graph);
-      Directory.CreateDirectory ("c:/etc");
-      graph.SaveTo ("c:/etc/test.html");
-      var pi = new ProcessStartInfo ("c:/etc/test.html") { UseShellExecute = true };
-      Process.Start (pi);
-      Console.Write ("\nPress any key..."); Console.ReadKey (true);
+      // Initialize tokenizer with the expression
+      Tokenizer tokenizer = new Tokenizer (expression);
+
+      // Create parser instance with the tokenizer
+      Parser parser = new Parser (tokenizer);
+      NExpr parsedExpression = parser.Parse ();
+
+      // Print the parsed expression (for debugging)
+      Console.WriteLine (parsedExpression);
+      //string expr = "12.0 + pi + sin(3.5) + atan2(12, 13.5) + length(\"hello\") + random ()/*(pi + 3.5) + 2 <= 1 <> \"Hello\" + two > true + \"World\"*/";
+      //var node = new Parser (new Tokenizer (expr)).Parse ();
+
+      //Console.WriteLine ("-----------------");
+      //Console.WriteLine ($"Expression = {expr}");
+      //Dictionary<string, NType> types = new () { ["pi"] = NType.Real, ["two"] = NType.Int };
+      //NType type = node.Accept (new ExprTyper (types));
+      //Console.WriteLine ($"Type = {type}");
+
+      //var graph = new ExprGrapher (expr);
+      //node.Accept (graph);
+      //Directory.CreateDirectory ("c:/etc");
+      //graph.SaveTo ("c:/etc/test.html");
+      //var pi = new ProcessStartInfo ("c:/etc/test.html") { UseShellExecute = true };
+      //Process.Start (pi);
+      //Console.Write ("\nPress any key..."); Console.ReadKey (true);
    }
 
    // Type checks of various expressions

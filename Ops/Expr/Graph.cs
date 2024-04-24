@@ -47,6 +47,11 @@ public class ExprGrapher : Visitor<int> {
       mSB.AppendLine ($"id{++mID}{text}");
       return mID;
    }
+
+   public override int Visit (NFnCall nFnCall) {
+      throw new NotImplementedException ();
+   }
+
    readonly StringBuilder mSB = new ();
    readonly string mExpression;
    int mID = 0;
