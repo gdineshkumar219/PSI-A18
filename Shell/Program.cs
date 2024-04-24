@@ -5,10 +5,10 @@ using System.Diagnostics;
 
 static class Start {
    static void Main () {
-      Test1 ();      // Test ExprEval and ExprILGen
+      //Test1 ();      // Test ExprEval and ExprILGen
       Test2 ();      // Test ExprTyper and ExprGrapher
-      Test3 ();      // Type checks on various expressions
-      Test4 ();      // Tokenizer - printout of invalid token
+      //Test3 ();      // Type checks on various expressions
+      //Test4 ();      // Tokenizer - printout of invalid token
    }
 
    // Test ExprEval and ExprILGen
@@ -42,7 +42,7 @@ static class Start {
       node.Accept (graph);
       Directory.CreateDirectory ("c:/etc");
 
-      var xml = new ExprXml (expr);
+      var xml = new ExprXml ();
       xml.SaveTo ("c:/etc/test.xml", node.Accept (xml));
 
       graph.SaveTo ("c:/etc/test.html");
