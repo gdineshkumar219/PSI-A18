@@ -3,9 +3,7 @@ using System.Xml.Linq;
 
 namespace Ops.Expr;
 #region ExprXml -----------------------------------------------------------------------------------
-/// <summary>
-/// Represents a visitor for converting expression nodes to XML format.
-/// </summary>
+/// <summary> Represents a visitor for converting expression nodes to XML format </summary>
 public class ExprXml : Visitor<XElement> {
    #region Overrides ------------------------------------------------------------------------------
    public override XElement Visit (NLiteral lit) => CreateNode ("Literal", ("value", lit.Value), ("type", lit.Type));
