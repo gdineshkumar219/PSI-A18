@@ -58,7 +58,7 @@ public class Parser {
 
    // primary = IDENTIFIER | INTEGER | REAL | STRING | "(" expression ")" | "not" primary .
    NExpr Primary () {
-      if (Match (IDENT)) return new NIdentifier (Prev);
+      if (Match (IDENT)) return Peek (OPEN) ? new NFnCall (Prev, Arglist ()) : new NIdentifier (Prev);
       if (Match (INTEGER, REAL, BOOLEAN, CHAR, STRING)) return new NLiteral (Prev);
       if (Match (NOT)) return new NUnary (Prev, Primary ());
       Expect (OPEN, "Expecting identifier or literal");
@@ -66,6 +66,22 @@ public class Parser {
       Expect (CLOSE, "Expecting ')'");
       return expr;
    }
+
+   NExpr[] Arglist () {
+      Expect (OPEN, "Expecting identifier or literal");
+      List<NExpr> list = new ();
+      if (Peek (INTEGER, IDENT, REAL, STRING)) {
+         var expr = Expression ();
+         list.Add (expr);
+      }
+      while (Match (COMMA)) list.Add (Expression ());
+      Expect (CLOSE, "Expecting ')'");
+      return list.ToArray ();
+   }
+
+   // Like match, but does not consume the token
+   bool Peek (params Token.E[] kinds) => kinds.Contains (mToken.Kind);
+
 
    // Helpers ---------------------------------------------
    // Expect to find a particular token
