@@ -57,8 +57,8 @@ public class Parser {
    }
 
    // primary = IDENTIFIER | INTEGER | REAL | STRING | "(" expression ")" | "not" primary .
-   NExpr Primary1 () {
-      if (Match (IDENT)) return new NIdentifier (Prev);
+   NExpr Primary () {
+      if (Match (IDENT)) return Peek (OPEN) ? new NFnCall (Prev, Arglist ()) : new NIdentifier (Prev);
       if (Match (INTEGER, REAL, BOOLEAN, CHAR, STRING)) return new NLiteral (Prev);
       if (Match (NOT)) return new NUnary (Prev, Primary ());
       Expect (OPEN, "Expecting identifier or literal");
@@ -66,36 +66,19 @@ public class Parser {
       Expect (CLOSE, "Expecting ')'");
       return expr;
    }
-   // Modify the Primary() routine to handle function calls
-   NExpr Primary () {
-      if (Match (IDENT) && Peek (OPEN)) {
-         Token functionName = Prev;
-         Expect (OPEN, "Expecting '(' after function name");
 
-         List<NExpr> parameters = new();
-         if (!Peek (CLOSE)) {
-            parameters.Add (Expression ());
-            while (Match (COMMA))
-               parameters.Add (Expression ());
-         }
-
-         Expect (CLOSE, "Expecting ')' after function arguments");
-         return new NFnCall (functionName, parameters.ToArray());
+   NExpr[] Arglist () {
+      Expect (OPEN, "Expecting identifier or literal");
+      List<NExpr> list = new ();
+      if (Peek (INTEGER, IDENT, REAL, STRING)) {
+         var expr = Expression ();
+         list.Add (expr);
       }
-      NExpr expr = Expression ();
-
-      // Handle other cases (variable reference, literals, etc.)
-      if (Match (IDENT)) return new NIdentifier (Prev);
-      if (Match (INTEGER, REAL, BOOLEAN, CHAR, STRING)) return new NLiteral (Prev);
-      if (Match (NOT)) return new NUnary (Prev, Primary ());
-      if (Match (OPEN)) {
-         Expect (CLOSE, "Expecting ')'");
-      }
-         return expr;
-      
-
-      //throw new Exception ($"Unexpected token: {mToken}");
+      while (Match (COMMA)) list.Add (Expression ());
+      Expect (CLOSE, "Expecting ')'");
+      return list.ToArray ();
    }
+
    // Like match, but does not consume the token
    bool Peek (params Token.E[] kinds) => kinds.Contains (mToken.Kind);
 
