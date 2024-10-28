@@ -4,10 +4,11 @@ using System.Diagnostics;
 
 static class Start {
    static void Main () {
-      Test1 ();      // Test ExprEval and ExprILGen
-      Test2 ();      // Test ExprTyper and ExprGrapher
-      Test3 ();      // Type checks on various expressions
-      Test4 ();      // Tokenizer - printout of invalid token
+      //Test1 ();      // Test ExprEval and ExprILGen
+      //Test2 ();      // Test ExprTyper and ExprGrapher
+      //Test3 ();      // Type checks on various expressions
+      //Test4 ();      // Tokenizer - printout of invalid token
+      Test5 ();
    }
 
    // Test ExprEval and ExprILGen
@@ -90,6 +91,16 @@ static class Start {
       Console.WriteLine ();
       Console.Write ("\nPress any key..."); Console.ReadKey (true);
    }
+
+   static void Test5 () {
+      string expr = "12 + pi + sin (3.5) + atan (12, 13.5)  + length(\"hello\") + random ()";
+      var node = new Parser (new Tokenizer (expr)).Parse ();
+      Console.WriteLine ($"\nParsed Expression = {expr}");
+      var il = node.Accept (new ExprILGen ());
+      Console.WriteLine ($"\nIL Code = \n{il}");
+      Console.Write ("\nPress any key..."); Console.ReadKey (true);
+   }
+
    static string Prog0 = """
       program Expr;
       var
