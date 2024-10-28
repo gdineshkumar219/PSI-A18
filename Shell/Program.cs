@@ -94,8 +94,11 @@ static class Start {
 
    static void Test5 () {
       string expr = "12 + pi + sin (3.5) + atan (12, 13.5)  + length(\"hello\") + random ()";
-      _ = new Parser (new Tokenizer (expr)).Parse ();
+      var node = new Parser (new Tokenizer (expr)).Parse ();
       Console.WriteLine ($"\nParsed Expression = {expr}");
+      var il = node.Accept (new ExprILGen ());
+      Console.WriteLine ($"\nIL Code = \n{il}");
+      Console.Write ("\nPress any key..."); Console.ReadKey (true);
    }
 
    static string Prog0 = """

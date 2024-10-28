@@ -20,5 +20,4 @@ primary
     = IDENTIFIER | NUMBER | STRING | "(" expression ")" | "not" primary | IDENTIFIER arglist.
 
 arglist
-    = "(" [expression {"," expression}] ")"
-    
+    = "(" [expression {"," expression}] ")" .
